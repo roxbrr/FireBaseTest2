@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">FireBaseTest2</string>
+    <string name="save_btn_str">Save</string>
+    <string name="author_hint">Enter author name</string>
+    <string name="fetch_label">FETCH</string>
+    <string name="next_activity">next ACT</string>
+    <string name="enter_number">Enter Number</string>
+    <string name="enter_phone_hint">Enter Phone</string>
+    <string name="login_btn">Login</string>
+
+
+</resources>
