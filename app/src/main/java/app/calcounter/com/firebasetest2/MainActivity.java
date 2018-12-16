@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
     private DocumentReference mDocRef = FirebaseFirestore.getInstance().collection("sampleData").document("inspiration");
 
+    private DocumentReference OBJECTTESTREF = FirebaseFirestore.getInstance().collection("NukeEmTillTheyGlow").document("ThenShootEmInTheDark");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
         //DocumentListenOptions verboseOptions = new DocumentListenOptions();
         //verboseOptions.includeMetadataChanges();
 
+//        OBJECTTEST.addSnapshotListener(this, new EventListener<DocumentSnapshot>() { // this is the event listener
+//            @Override
+//            public void onEvent( DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+//                if(documentSnapshot.exists())
+//                {
+//
+//                }
+//
+//            }
+//        });
+
                                                     // add verbose options here if you want that included
         mDocRef.addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
             @Override
@@ -93,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
                     String quoteText = documentSnapshot.getString(QUOTE_KEY);
                     String authorText = documentSnapshot.getString(AUTHOR_KEY);
                     textViewQuoteDisplay.setText(" " + quoteText + " " + " -- " + authorText);
+
+
+
                 }else if(e != null)
                 {
                     Log.w("document update issue", e);
@@ -113,12 +129,33 @@ public class MainActivity extends AppCompatActivity {
                 {
                     String quoteText = documentSnapshot.getString(QUOTE_KEY);
                     String authorText = documentSnapshot.getString(AUTHOR_KEY);
-                    textViewQuoteDisplay.setText(" " + quoteText + " " + " -- " + authorText);
+                    //textViewQuoteDisplay.setText(" " + quoteText + " " + " -- " + authorText);
 
                     //Map<String,Object> myData = documentSnapshot.getData();
 
                     // money in the bank
                     InspiringQuote myQuote = documentSnapshot.toObject(InspiringQuote.class);
+                }
+            }
+        });
+
+
+        OBJECTTESTREF.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if(documentSnapshot.exists())
+                {
+
+                    LocationData castleBravo = documentSnapshot.toObject(LocationData.class);
+
+
+                    textViewQuoteDisplay.setText(" " + castleBravo.task1.comments);
+
+
+                    //Map<String,Object> myData = documentSnapshot.getData();
+
+                    // money in the bank
+
                 }
             }
         });
@@ -146,6 +183,32 @@ public class MainActivity extends AppCompatActivity {
         Map<String,Object> dataToSave = new HashMap<String,Object>();
         dataToSave.put(QUOTE_KEY,quoteText);
         dataToSave.put(AUTHOR_KEY, authorText);
+
+
+
+        LocationData CASTLEBRAVO = new LocationData();
+        CASTLEBRAVO.task1.comments = "fart chips";
+        CASTLEBRAVO.task1.materials1 = "chicken";
+        CASTLEBRAVO.task1.materials2 = "steak";
+        CASTLEBRAVO.task4.materials2 = "streak";
+        CASTLEBRAVO.task10.materials2 = "luck";
+
+        OBJECTTESTREF.set(CASTLEBRAVO).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("HOLY MOTHER OF GOD", "Document has been saved!");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("WE CANT DO IT CAPTAIN", "didn't save document");
+            }
+        });
+
+
+
+
+
 
         mDocRef.set((dataToSave)).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
